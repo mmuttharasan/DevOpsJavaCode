@@ -58,7 +58,40 @@ pipeline{
                   sh 'mvn package'
               }
           }
-	     
-          
+          stage('BuildDockerImage'){
+		  
+              steps{
+		  
+                  sh 'sudo docker build -t myproject:CICD .'
+              }
+          }	     
+           stage('DockerTag'){
+		  
+              steps{
+		  
+                  sh 'sudo docker tag myproject:CICD edu123/myproject:CICD'
+              }
+          }
+          stage('DockerLogin'){
+		  
+              steps{
+		  
+                  sh 'sudo docker login --username edu123 --password Edureka@123'
+              }
+          }
+          stage('DockerPush'){
+		  
+              steps{
+		  
+                  sh 'sudo docker push edu123/myproject:CICD'
+              }
+          }	  
+          stage('DockerContainerCreation'){
+		  
+              steps{
+		  
+                  sh 'sudo docker run -d -p 8081:8080 edu123/myproject:CICD'
+              }
+          }	  
       }
 }
